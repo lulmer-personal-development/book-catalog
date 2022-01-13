@@ -19,7 +19,11 @@ DB_USER=user
 DB_PASS=pass
 DB_NAME=book_catalog
 
-Once this this is done you can run the program with the command
+Once this this is done you can install the dependencies with
+
+>npm install
+
+Then, run the program with the command
 
 >node index.js
 
@@ -28,12 +32,12 @@ When running for the first time, you should first hit the endpoint /init to crea
 ## API
 
 Retrieval
-GET /books - Will return all book entries in the catalog table
-GET /books?keyword={kw} - Will return all books with an associated kw
-GET /books/{id} - Will return a single book corresponding to the number id in the url
+- GET /books - Will return all book entries in the catalog table
+- GET /books?keyword={kw} - Will return all books with an associated kw
+- GET /books/{id} - Will return a single book corresponding to the number id in the url
 
 Creating
-POST /books - Will create a book using information from the requests body. The body should include the book's name, author, and keywords
+- POST /books - Will create a book using information from the requests body. The body should include the book's name, author, and keywords
 you wish to associate with the book.
 
 Example:
@@ -50,5 +54,5 @@ Example:
 }
 
 Deleting
-DELETE /books - Will delete all books
-DELETE /book - Will delete a single book corresponding to the number id in the url
+- DELETE /books - Will delete all books
+- DELETE /book - Will delete a single book corresponding to the number id in the url
