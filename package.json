@@ -1,0 +1,29 @@
+{
+  "name": "book-catalog",
+  "version": "1.0.0",
+  "description": "A REST interface to create, retrieve, and delete books from a catalog and search via keywords.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lulmer-personal-development/book-catalog.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mysql",
+    "challenge"
+  ],
+  "author": "Lucas Ulmer (ulmer22.lucas@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lulmer-personal-development/book-catalog/issues"
+  },
+  "homepage": "https://github.com/lulmer-personal-development/book-catalog#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
+  }
+}
