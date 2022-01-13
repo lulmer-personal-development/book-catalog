@@ -1,23 +1,47 @@
 const database = require("../db");
 
-const getAllBooks = (req, res) => {
-    sql = "SELECT * FROM books";
+const initializeCatalog = (req, res) => {
+    sql = "CREATE TABLE IF NOT EXISTS books (id int NOT NULL AUTO_INCREMENT, name varchar(255), author varchar(255), keywords varchar(1000), PRIMARY KEY(id))";
 
     database.query(sql, (err, result) => {
         if (err) {
             console.log('error: ', err);
             res.status(500).send({error: err.message})
             return;
+        }
+
+        res.status(200).send({message: "Table created successfully"});
+    });
+}
+
+const getAllBooks = (req, res) => {
+    sql = "SELECT * FROM books";
+
+    const keyword = req.query.keyword;
+    if(keyword) {
+        sql += " WHERE keywords LIKE ?";
+    }
+
+    database.query(sql, ['%' + keyword + '%'], (err, result) => {
+        if (err) {
+            console.log('error: ', err);
+            res.status(500).send({error: err.message})
+            return;
         };
 
-        res.status(200).json(result);
+        var books = [];
+        result.forEach((row) => {
+            var book = queryToBook(row);
+            books.push(book);
+        });
+        res.status(200).json(books);
     });
 };
 
 const getBookById = (req, res) => {
-    sql = "SELECT * FROM books WHERE id=" + req.params.id;
+    sql = "SELECT * FROM books WHERE id=?";
 
-    database.query(sql, (err, result) => {
+    database.query(sql, [req.param.id], (err, result) => {
         if (err) {
             console.log('error: ', err);
             res.status(500).send({error: err.message})
@@ -25,12 +49,24 @@ const getBookById = (req, res) => {
         };
 
         if (result.length) {
-            res.status(200).json(result[0]);
+            res.status(200).json(queryToBook(result[0]));
+            return;
         }
 
         res.status(404).send({error: "No Book Found"})
     });
 };
+
+function queryToBook(result) {
+    const book = {
+        id: result.id,
+        name: result.name,
+        author: result.author,
+        keywords: result.keywords.split(",")
+    }
+
+    return book;
+}
 
 const createBook = (req, res) => {
     sql = "INSERT INTO books SET ?";
@@ -46,9 +82,17 @@ const createBook = (req, res) => {
         return;
     }
 
+    const keywordArray = req.body.keywords;
+    var keywordString = "";
+    
+    if (keywordArray && keywordArray.length > 0) {
+        keywordString = keywordArray.join(",");
+    }
+
     const book = {
         name: req.body.name,
-        author: req.body.author
+        author: req.body.author,
+        keywords: keywordString
     };
 
     database.query(sql, book, (err, row) => {
@@ -97,6 +141,7 @@ const deleteBookById = (req, res) => {
 }
 
 module.exports = {
+    initializeCatalog,
     getAllBooks,
     getBookById,
     createBook,
